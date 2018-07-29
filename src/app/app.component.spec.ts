@@ -1,41 +1,64 @@
-import { TestBed, async } from "@angular/core/testing";
-import { AppComponent } from "./app.component";
-
-declare const global;
-
 import test from "ava";
 
+var jsdom = require("jsdom");
+
+const { JSDOM } = jsdom;
+
+//var document = jsdom.jsdom('<!doctype html><html><head><title>Mocha Testing Page</title></head><body></body></html>');
+
+const { document } = new JSDOM("").window;
+var doc = global.document || document;
+
+var window = document.defaultView;
+
+global.document = doc;
+global.HTMLElement = window.HTMLElement;
+global.XMLHttpRequest = window.XMLHttpRequest;
+global.Node = window.Node;
+
+/*
+if (typeof process !== 'undefined' && !process.browser) {
+  window.indexedDB = global.indexedDB = require('fake-indexeddb');
+}
+*/
+
 require("core-js/es6");
+require("core-js/es6/promise");
 require("core-js/es7/reflect");
 
-require("zone.js/dist/zone-node");
+// require("zone.js/dist/zone");
+require('zone.js');
 require("zone.js/dist/long-stack-trace-zone");
 require("zone.js/dist/proxy");
 require("zone.js/dist/sync-test");
 require("zone.js/dist/async-test");
 require("zone.js/dist/fake-async-test");
 
-const testing = require("@angular/core/testing");
-const browser = require("@angular/platform-browser-dynamic/testing");
+import { AppComponent } from "./app.component";
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
 
-if (typeof window === "undefined") {
-  testing.TestBed.initTestEnvironment(
-    browser.BrowserDynamicTestingModule,
-    browser.platformBrowserDynamicTesting()
-  );
-}
+} from "@angular/platform-browser-dynamic/testing";
+import { ComponentFixture, async, getTestBed, TestBed } from "@angular/core/testing";
 
-require("browser-env")();
+getTestBed().initTestEnvironment(
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting()
+);
 
-window;
+test("Test Ava works", t => {
 
-test("weird DomExceptions....", t => {
+  let fixtures
+
   TestBed.configureTestingModule({
     declarations: [AppComponent]
-  }).compileComponents();
+  })
 
-  const fixture = TestBed.createComponent(AppComponent);
-  const app = fixture.debugElement.componentInstance;
+  fixtures = TestBed.createComponent(AppComponent);
 
-  t.is(app, app);
+
+  console.log(fixtures);
+
+  t.is(fixtures, fixtures);
 });
