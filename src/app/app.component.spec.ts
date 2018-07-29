@@ -1,27 +1,41 @@
-import { TestBed, async } from '@angular/core/testing';
-import { AppComponent } from './app.component';
-describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
-  }));
-  it('should create the app', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
-  it(`should have as title 'app'`, async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app');
-  }));
-  it('should render title in a h1 tag', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to app!');
-  }));
+import { TestBed, async } from "@angular/core/testing";
+import { AppComponent } from "./app.component";
+
+declare const global;
+
+import test from "ava";
+
+require("core-js/es6");
+require("core-js/es7/reflect");
+
+require("zone.js/dist/zone-node");
+require("zone.js/dist/long-stack-trace-zone");
+require("zone.js/dist/proxy");
+require("zone.js/dist/sync-test");
+require("zone.js/dist/async-test");
+require("zone.js/dist/fake-async-test");
+
+const testing = require("@angular/core/testing");
+const browser = require("@angular/platform-browser-dynamic/testing");
+
+if (typeof window === "undefined") {
+  testing.TestBed.initTestEnvironment(
+    browser.BrowserDynamicTestingModule,
+    browser.platformBrowserDynamicTesting()
+  );
+}
+
+require("browser-env")();
+
+window;
+
+test("weird DomExceptions....", t => {
+  TestBed.configureTestingModule({
+    declarations: [AppComponent]
+  }).compileComponents();
+
+  const fixture = TestBed.createComponent(AppComponent);
+  const app = fixture.debugElement.componentInstance;
+
+  t.is(app, app);
 });
